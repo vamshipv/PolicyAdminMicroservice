@@ -9,8 +9,9 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authorization;
 using PolicyMicroservice.Repository;
 using Microsoft.Extensions.Logging;
+using PolicyMicroservice.Models;
 
-namespace Policy_Microservice.Controllers
+namespace PolicyMicroservice.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
@@ -26,22 +27,20 @@ namespace Policy_Microservice.Controllers
             _policyRepo = policyRepo;
         }
 
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreatePolicy")]
-        public async Task<string> CreatePolicy(int PropertyId)//int BusinessId, int PolicyMasterId, int QuoteId)
+        public async Task<string> CreatePolicy(int PropertyId)
         {
             _log4net.Info("CreatePolicy has been accessed");
-            // string policyStatus = ;
-            return await _policyRepo.CreatePolicy(PropertyId);  //, PolicyMasterId, QuoteId);
-            // return policyStatus;
+            return await _policyRepo.CreatePolicy(PropertyId);
         }
 
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("IssuePolicy")]
         public async Task<string> IssuePolicy(int PolicyId, string PaymentDetails)
         {
             _log4net.Info("IssuePolicy has been accessed");
-            // string policyStatus = ;
             return await _policyRepo.IssuePolicy(PolicyId, PaymentDetails);
-            // return policyStatus;
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
@@ -55,27 +54,25 @@ namespace Policy_Microservice.Controllers
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("GetQuote")]
-        public async Task<dynamic> GetQuote(int BusinessValue, int PropertyValue)
+        public async Task<Quote> GetQuote(int BusinessValue, int PropertyValue)
         {
             _log4net.Info("GetQuote has been accessed");
             var quote = await _policyRepo.GetQuote(BusinessValue, PropertyValue);
-            if (quote == null)
-            {
-                return "Quote Not Found";
-            }
             return quote;
         }
 
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("ViewPolicies")]
-        public dynamic ViewPolicies()  //async Task<ActionResult<
+        public dynamic ViewPolicies()
         {
             _log4net.Info("ViewConsumerPolicyById has been accessed");
             var policies = _policyRepo.ListOfPolicies();
             return policies;
         }
 
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("ViewProperties")]
-        public dynamic ViewProperties()  //async Task<ActionResult<
+        public dynamic ViewProperties()
         {
             _log4net.Info("ViewConsumerPolicyById has been accessed");
             var properties = _policyRepo.ListOfProperties();

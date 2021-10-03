@@ -1,6 +1,7 @@
 using ConsumerMicroservice.Models;
 using ConsumerMicroservice.RepositoryLayer;
 using ConsumerMicroservice.RepositoryLayer.IRepositoryLayer;
+using ConsumerMicroservice.ServiceLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,7 @@ namespace ConsumerMicroservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Using CROS for cross connection to access end points from Angular
             services.AddCors();
             services.AddCors(c =>
             {
@@ -37,8 +39,11 @@ namespace ConsumerMicroservice
                  .AllowAnyHeader().AllowCredentials());
             });
             services.AddScoped<IConsumerRepository, ConsumerRepository>();
+            services.AddScoped<IConsumerBusinessRepository, ConsumerBusinessRepository>();
+            services.AddScoped<IBusinessPropertyRepository, BusinessPropertyRepository>();
+            services.AddScoped<ConsumerService, ConsumerService>();
             services.AddControllers();
-            services.AddDbContext<PolicyAdminDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
+            services.AddDbContext<InsureityPortalDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConsumerMicroservice", Version = "v1" });

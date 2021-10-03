@@ -10,19 +10,21 @@ namespace ConsumerMicroservice.RepositoryLayer
 {
     public class ConsumerRepository : IConsumerRepository
     {
-        private readonly PolicyAdminDBContext _dbContext;
+        private readonly InsureityPortalDBContext _dbContext;
 
-        public ConsumerRepository(PolicyAdminDBContext dbContext)
+        public ConsumerRepository(InsureityPortalDBContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        // Create Consumer, passing Consumer Class from Model Folder
         public bool CreateConsumer(Consumer consumer)
         {
             _dbContext.Consumer.Add(consumer);
             return Save();
         }
 
+         // Delete Consumer with Id
         public bool DeleteConsumer(int ConsumerId)
         {
             Consumer consumer = _dbContext.Consumer.FirstOrDefault(x => x.ConsumerId == ConsumerId);
@@ -33,105 +35,35 @@ namespace ConsumerMicroservice.RepositoryLayer
             return Save();
         }
 
+        // Get Consumer by Id
         public Consumer GetConsumer(int ConsumerId)
         {
             return _dbContext.Consumer.FirstOrDefault(x => x.ConsumerId == ConsumerId);
         }
 
+        // get all consumer from the database
         public IEnumerable<Consumer> GetConsumers()
         {
             return _dbContext.Consumer.ToList();
         }
 
+        // Update consumer
         public bool UpdateConsumer(int ConsumerId, Consumer consumer)
         {
             _dbContext.Consumer.Update(consumer);
             return Save();
         }
 
+        // Check for if consumer already exixts
         public bool ConsumerExists(int ConsumerId)
         {
             return _dbContext.Consumer.Any(a => a.ConsumerId == ConsumerId);
         }
 
+        // return True if there is a insertion into the database else false 
         public bool Save()
         {
             return _dbContext.SaveChanges() >= 0 ? true : false;
-        }
-        //---------------------------------------------------------
-        public IEnumerable<Business> GetBusiness()
-        {
-            return _dbContext.Business.Include(c => c.BusinessMaster).ToList();
-        }
-
-        public Business GetBusinesss(int BusinessId)
-        {
-            return _dbContext.Business.FirstOrDefault(x => x.BusinessId == BusinessId);
-        }
-
-        public bool CreateBusiness(Business business)
-        {
-            _dbContext.Business.Add(business);
-            return Save();
-        }
-
-        public bool UpdateBusiness(int ConsumerId, Business business)
-        {
-            _dbContext.Business.Update(business);
-            return Save();
-        }
-
-        public bool DeleteBusiness(int BusinessId)
-        {
-            Business business = _dbContext.Business.FirstOrDefault(x => x.BusinessId == BusinessId);
-            if (business != null)
-            {
-                _dbContext.Business.Remove(business);
-            }
-            return Save();
-        }
-
-        public bool BusinessExists(int BusinessId)
-        {
-            return _dbContext.Business.Any(a => a.BusinessId == BusinessId);
-        }
-        //--------------------------------------------------------------------------
-        public IEnumerable<Property> GetProperty()
-        {
-            //Use Inculde to add businessMaster in Get Api Display
-            return _dbContext.Property.Include(c => c.PropertyMaster).ToList();
-        }
-
-        public Property GetProperties(int PropertyId)
-        {
-            return _dbContext.Property.FirstOrDefault(x => x.PropertyId == PropertyId);
-        }
-
-        public bool CreateProperty(Property property)
-        {
-            _dbContext.Property.Add(property);
-            return Save();
-        }
-
-        public bool UpdateProperty(int PropertyId, Property property)
-        {
-            _dbContext.Property.Update(property);
-            return Save();
-        }
-
-        public bool DeleteProperty(int PropertyId)
-        {
-            Property property = _dbContext.Property.FirstOrDefault(x => x.PropertyId == PropertyId);
-            if (property != null)
-            {
-                _dbContext.Property.Remove(property);
-            }
-            return Save();
-        }
-
-        public bool PropertyExists(int PropertyId)
-        {
-            return _dbContext.Property.Any(a => a.PropertyId == PropertyId);
         }
     }
 }

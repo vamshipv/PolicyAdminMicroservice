@@ -1,5 +1,5 @@
 ﻿using ConsumerMicroservice.Models;
-using ConsumerMicroservice.RepositoryLayer.IRepositoryLayer;
+using ConsumerMicroservice.ServiceLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,56 +16,66 @@ namespace ConsumerMicroservice.Controllers
     [ApiController]
     public class ConsumerController : ControllerBase
     {
-        private readonly IConsumerRepository _consumerRepository;
-        //static readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(ConsumerController));
+        private readonly ConsumerService _consumerService;
         private readonly ILogger<Consumer> _log;
 
-        public ConsumerController(ILogger<Consumer> log, IConsumerRepository consumerRepository)
+        public ConsumerController(ILogger<Consumer> log, ConsumerService consumerService)
         {
             _log = log;
-            _consumerRepository = consumerRepository;
+            _consumerService = consumerService;
         }
 
-        // Add logs here
+        // Display of all Consumers
         [HttpGet("GetConsumer")]
         public IEnumerable<Consumer> GetConsumer()
         {
-            return _consumerRepository.GetConsumers();
+            return _consumerService.GetConsumers();
         }
 
+        // Display of all business
         [HttpGet("GetBusiness")]
         public IEnumerable<Business> GetBusiness()
         {
-            return _consumerRepository.GetBusiness();
+            return _consumerService.GetBusiness();
         }
 
+        // Display of all Property
         [HttpGet("GetProperty")]
         public IEnumerable<Property> GetProperty()
         {
-            return _consumerRepository.GetProperty();
+            return _consumerService.GetProperty();
         }
 
-        [HttpGet("{ConsumerId:int}")]
+        // Display of consumer by ID
+        // [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet("GetConsumerById")]
         public ActionResult GetConsumerById(int ConsumerId)
         {
-            var obj = _consumerRepository.GetConsumer(ConsumerId);
+            var obj = _consumerService.GetConsumer(ConsumerId);
             return Ok(obj);
         }
 
-        [HttpGet("{BusinessId:int}")]
+        // Display of business by ID
+        // [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet("GetBusinessById")]
         public ActionResult GetBusinessById(int BusinessId)
         {
-            var obj = _consumerRepository.GetBusinesss(BusinessId);
+            var obj = _consumerService.GetBusinesss(BusinessId);
             return Ok(obj);
         }
 
-        [HttpGet("{PropertyId:int}")]
+        // Display of property by ID
+        // [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet("GetPropertyById")]
         public ActionResult GetPropertyById(int PropertyId)
         {
-            var obj = _consumerRepository.GetProperties(PropertyId);
+            var obj = _consumerService.GetProperties(PropertyId);
             return Ok(obj);
         }
 
+
+        // Create Consumer using HTTPPOST
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateConsumer")]
         //[EnableCors("AllowAllOrigins")]
         [ProducesResponseType(201, Type = typeof(Consumer))]
@@ -82,7 +92,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                if (!_consumerRepository.CreateConsumer(consumer) && !_consumerRepository.ConsumerExists(consumer.ConsumerId))
+                if (!_consumerService.CreateConsumer(consumer) && !_consumerService.ConsumerExists(consumer.ConsumerId))
                 {
                     return new ObjectResult("Database insertion Error") { StatusCode = 500 };
                 }
@@ -95,11 +105,13 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // Create Business using HTTPPOST
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateBusiness")]
         [ProducesResponseType(204)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult CreateBusiness(Business business)
+        public ActionResult CreateBusiness([FromBody] Business? business)
         {
             try
             {
@@ -109,7 +121,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                if (_consumerRepository.CreateBusiness(business))
+                if (_consumerService.CreateBusiness(business))
                 {
                     return new CreatedResult("GetBusiness", new { id = business.BusinessId });
                 }
@@ -118,15 +130,17 @@ namespace ConsumerMicroservice.Controllers
             catch (Exception e)
             {
                 _log.LogError("Error Creating" + e.Message);
-                return new ObjectResult("Database Error, Check for Id") { StatusCode = 500 };
+                return new ObjectResult("Database Error, Check for Id" + e.Message) { StatusCode = 500 };
             }
         }
 
+        // Create Property using HTTPPOST
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateProperty")]
         [ProducesResponseType(204)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult CreateProperty(Property property)
+        public ActionResult CreateProperty([FromBody] Property? property)
         {
             try
             {
@@ -136,7 +150,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                if (_consumerRepository.CreateProperty(property))
+                if (_consumerService.CreateProperty(property))
                 {
                     return new CreatedResult("GetProperty", new { id = property.PropertyId });
                 }
@@ -145,10 +159,12 @@ namespace ConsumerMicroservice.Controllers
             catch (Exception e)
             {
                 _log.LogError("Error Creating" + e.Message);
-                return new ObjectResult("Database Error, Check for Id") { StatusCode = 500 };
+                return new ObjectResult("Database Error, Check for Id" + e.Message) { StatusCode = 500 };
             }
         }
 
+        // udpate consumer
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateConsumer")]
         public ActionResult UpdateConsumer(int ConsumerId, [FromBody] Consumer consumer)
         {
@@ -160,7 +176,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var updateResult = _consumerRepository.UpdateConsumer(ConsumerId, consumer);
+                var updateResult = _consumerService.UpdateConsumer(ConsumerId, consumer);
 
                 if (updateResult)
                 {
@@ -175,6 +191,8 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // udpate business
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateBusiness")]
         public ActionResult UpdateBusiness(int BusinessId, [FromBody] Business business)
         {
@@ -186,7 +204,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var updateResult = _consumerRepository.UpdateBusiness(BusinessId, business);
+                var updateResult = _consumerService.UpdateBusiness(BusinessId, business);
 
                 if (updateResult)
                 {
@@ -201,6 +219,8 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // udpate property  
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateProperty")]
         public ActionResult UpdateProperty(int PropertyId, [FromBody] Property property)
         {
@@ -212,7 +232,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var updateResult = _consumerRepository.UpdateProperty(PropertyId, property);
+                var updateResult = _consumerService.UpdateProperty(PropertyId, property);
 
                 if (updateResult)
                 {
@@ -227,6 +247,7 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // Delete Consumer by passing Id
         [HttpDelete("DeleteConsumer")]
         public ActionResult DeleteConsumer(int ConsumerId)
         {
@@ -238,7 +259,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var deleteResult = _consumerRepository.DeleteConsumer(ConsumerId);
+                var deleteResult = _consumerService.DeleteConsumer(ConsumerId);
 
                 if (deleteResult)
                 {
@@ -253,6 +274,7 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // Delete busienss by passing Id
         [HttpDelete("DeleteBusiness")]
         public ActionResult DeleteBusiness(int BusinessId)
         {
@@ -264,7 +286,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var deleteResult = _consumerRepository.DeleteBusiness(BusinessId);
+                var deleteResult = _consumerService.DeleteBusiness(BusinessId);
 
                 if (deleteResult)
                 {
@@ -279,6 +301,7 @@ namespace ConsumerMicroservice.Controllers
             }
         }
 
+        // Delete Property by passing Id
         [HttpDelete("DeleteProperty")]
         public ActionResult DeleteProperty(int PropertyId)
         {
@@ -290,7 +313,7 @@ namespace ConsumerMicroservice.Controllers
                     return new BadRequestObjectResult(ModelState);
                 }
 
-                var deleteResult = _consumerRepository.DeleteProperty(PropertyId);
+                var deleteResult = _consumerService.DeleteProperty(PropertyId);
 
                 if (deleteResult)
                 {

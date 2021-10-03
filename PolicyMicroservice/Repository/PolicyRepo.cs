@@ -16,7 +16,7 @@ namespace PolicyMicroservice.Repository
             context = policyDBContext;
         }
 
-        public async Task<string> CreatePolicy(int PropertyId)//, int PolicyMasterId, int QuoteId)
+        public async Task<string> CreatePolicy(int PropertyId)
         {
             string PolicyStatus;
             try
@@ -26,27 +26,28 @@ namespace PolicyMicroservice.Repository
                     .Include(b => b.Business.BusinessMaster)
                     .Include(b => b.PropertyMaster)
                     .SingleOrDefault(b => b.PropertyId == PropertyId);
-
                 if (property == null)
                 {
-                    PolicyStatus = "Policy was not created";
+                    PolicyStatus = "No such property exists. Hence, Policy was not created";
                     return PolicyStatus;
                 }
 
                 var quote = GetQuote(property.Business.BusinessMaster.BusinessValue, property.PropertyMaster.PropertyValue);
                 if (quote == null)
                 {
-                    PolicyStatus = "Policy was not created";
+                    PolicyStatus = "No such Quote exists. Hence, Policy was not created";
                     return PolicyStatus;
                 }
+
                 PolicyMaster pm = context.PolicyMasters
                     .Where(pm => pm.BusinesssValue == property.Business.BusinessMaster.BusinessValue)
                     .SingleOrDefault();
                 if (pm == null)
                 {
-                    PolicyStatus = "Policy was not created";
+                    PolicyStatus = "No such PolicyMaster exists. Hence, Policy was not created";
                     return PolicyStatus;
                 }
+
                 PolicyStatus = "Initiated";
 
                 ConsumerPolicy policy = new ConsumerPolicy
@@ -75,6 +76,10 @@ namespace PolicyMicroservice.Repository
                 if (PaymentDetails == "Paid")
                 {
                     ConsumerPolicy policy = context.ConsumerPolicies.SingleOrDefault(p => p.PolicyId == PolicyId);
+                    if(policy == null)
+                    {
+                        return "No Policy exists with ID " + PolicyId;
+                    }
                     if (policy.PolicyStatus == "Issued")
                     {
                         return "Policy has already been Issued";
@@ -94,13 +99,11 @@ namespace PolicyMicroservice.Repository
 
         public async Task<Quote> GetQuote(int BusinessValue, int PropertyValue)
         {
-            List<Quote> quotes = context.Quotes.ToList();    // new List<Quote>();
-            // If BusinessValue and PropertyValue in [0,10]
+            List<Quote> quotes = context.Quotes.ToList();  
             if (BusinessValue >= 0 && BusinessValue <= 10 && PropertyValue >= 0 && PropertyValue <= 10)
             {
                 foreach (Quote q in quotes)
                 {
-                    // 1 >= 0 && 1 <= 2 && 1 >= 0 && 1 <= 2
                     if (BusinessValue >= q.BusinesssValueFrom && BusinessValue <= q.BusinesssValueTo &&
                         PropertyValue >= q.PropertyValueFrom && PropertyValue <= q.PropertyValueTo)
                     {
@@ -108,10 +111,8 @@ namespace PolicyMicroservice.Repository
                     }
                 }
             }
-            // No Quotes, Contact Insurance Provider
             return null;
         }
-
 
         public dynamic ViewPolicyById(int PolicyId)
         {
@@ -137,7 +138,7 @@ namespace PolicyMicroservice.Repository
             }
             catch
             {
-                return "Policy was not found";
+                return null;
             }
         }
 
@@ -163,7 +164,7 @@ namespace PolicyMicroservice.Repository
             }
             catch
             {
-                return "No Property was Found";
+                return null;
             }
         }
 
@@ -190,7 +191,7 @@ namespace PolicyMicroservice.Repository
             }
             catch
             {
-                return "No Policy was Found";
+                return null;
             }
 
         }

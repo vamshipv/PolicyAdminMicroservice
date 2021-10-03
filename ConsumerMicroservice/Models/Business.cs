@@ -7,10 +7,6 @@ namespace ConsumerMicroservice.Models
 {
     public partial class Business
     {
-        //public Business()
-        //{
-        //    Properties = new HashSet<Property>();
-        //}
 
         public int BusinessId { get; set; }
         public string BusinessName { get; set; }
@@ -20,7 +16,5 @@ namespace ConsumerMicroservice.Models
         public int ConsumerId { get; set; }
 
         public virtual BusinessMaster BusinessMaster { get; set; }
-        //public virtual Consumer Consumer { get; set; }
-        //public virtual ICollection<Property> Properties { get; set; }
     }
 }
