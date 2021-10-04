@@ -15,6 +15,8 @@ namespace ConsumerMicroservice.RepositoryLayer.IRepositoryLayer
         bool UpdateConsumer(int ConsumerId, Consumer consumer);
         bool DeleteConsumer(int ConsumerId);
         bool ConsumerExists(int ConsumerId);
+        IEnumerable<BusinessMaster> GetBusienssMaster();
+        IEnumerable<PropertyMaster> GetPropertyMaster();
         bool Save();
     }
 }

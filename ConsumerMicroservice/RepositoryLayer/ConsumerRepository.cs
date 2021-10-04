@@ -65,5 +65,15 @@ namespace ConsumerMicroservice.RepositoryLayer
         {
             return _dbContext.SaveChanges() >= 0 ? true : false;
         }
+
+        public IEnumerable<BusinessMaster> GetBusienssMaster()
+        {
+            return _dbContext.BusinessMaster.ToList();
+        }
+
+        public IEnumerable<PropertyMaster> GetPropertyMaster()
+        {
+            return _dbContext.PropertyMaster.ToList();
+        }
     }
 }

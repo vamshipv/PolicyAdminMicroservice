@@ -26,6 +26,8 @@ namespace ConsumerMicroservice.ServiceLayer
         bool UpdateProperty(int PropertyId, Property property);
         bool DeleteProperty(int PropertyId);
         bool PropertyExists(int PropertyId);
+        IEnumerable<BusinessMaster> GetBusienssMaster();
+        IEnumerable<PropertyMaster> GetPropertyMaster();
         bool Save();
     }
 }

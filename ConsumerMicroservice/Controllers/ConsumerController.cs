@@ -31,6 +31,17 @@ namespace ConsumerMicroservice.Controllers
         {
             return _consumerService.GetConsumers();
         }
+        [HttpGet("GetBusienssMaster")]
+        public IEnumerable<BusinessMaster> GetBusienssMaster()
+        {
+            return _consumerService.GetBusienssMaster();
+        }
+
+        [HttpGet("GetPropertyMaster")]
+        public IEnumerable<PropertyMaster> GetPropertyMaster()
+        {
+            return _consumerService.GetPropertyMaster();
+        }
 
         // Display of all business
         [HttpGet("GetBusiness")]

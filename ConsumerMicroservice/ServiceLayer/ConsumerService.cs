@@ -59,6 +59,11 @@ namespace ConsumerMicroservice.ServiceLayer
             return _businessPropertyRepository.DeleteProperty(PropertyId);
         }
 
+        public IEnumerable<BusinessMaster> GetBusienssMaster()
+        {
+            return _consumerRepository.GetBusienssMaster();
+        }
+
         public IEnumerable<Business> GetBusiness()
         {
             return _consumerBusinessRepository.GetBusiness();
@@ -87,6 +92,11 @@ namespace ConsumerMicroservice.ServiceLayer
         public IEnumerable<Property> GetProperty()
         {
             return _businessPropertyRepository.GetProperty();
+        }
+
+        public IEnumerable<PropertyMaster> GetPropertyMaster()
+        {
+            return _consumerRepository.GetPropertyMaster();
         }
 
         public bool PropertyExists(int PropertyId)
