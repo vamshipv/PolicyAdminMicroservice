@@ -16,10 +16,10 @@ namespace ConsumerMicroservice.Controllers
     [ApiController]
     public class ConsumerController : ControllerBase
     {
-        private readonly ConsumerService _consumerService;
+        private readonly IConsumerService _consumerService;
         private readonly ILogger<Consumer> _log;
 
-        public ConsumerController(ILogger<Consumer> log, ConsumerService consumerService)
+        public ConsumerController(ILogger<Consumer> log, IConsumerService consumerService)
         {
             _log = log;
             _consumerService = consumerService;

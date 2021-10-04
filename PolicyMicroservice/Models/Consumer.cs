@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+#nullable disable
 
 namespace PolicyMicroservice.Models
 {
@@ -13,13 +13,13 @@ namespace PolicyMicroservice.Models
         }
 
         public int ConsumerId { get; set; }
-        public string Name { get; set; }
-        public DateTime Dob { get; set; }
+        public string ConsumerName { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string PanNumber { get; set; }
         public int AgentId { get; set; }
-        public string AgentName { get; set; }
 
+        public virtual Agent Agent { get; set; }
         public virtual ICollection<Business> Businesses { get; set; }
     }
 }

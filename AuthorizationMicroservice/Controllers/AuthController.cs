@@ -45,7 +45,7 @@ namespace AuthorizationMicroservice.Controllers
                     issuer: "http://localhost:44354",
                     audience: "http://localhost:4200",
                     claims: new List<Claim>(),
-                    expires: DateTime.Now.AddMinutes(15),
+                    expires: DateTime.Now.AddMinutes(6000),
                     signingCredentials: signinCredentials
                 );
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);

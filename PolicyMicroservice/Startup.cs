@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PolicyMicroservice.Models;
 using PolicyMicroservice.Repository;
+using PolicyMicroservice.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,8 @@ namespace PolicyMicroservice
             });
             services.AddControllers();
             services.AddScoped<IPolicyRepo, PolicyRepo>();
-            services.AddDbContext<PolicyAdminDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
+            services.AddScoped<IPolicyService, PolicyService>();
+            services.AddDbContext<InsureityPortalDatabaseContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PolicyMicroservice", Version = "v1" });

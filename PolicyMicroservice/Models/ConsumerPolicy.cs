@@ -11,7 +11,7 @@ namespace PolicyMicroservice.Models
         public int PropertyId { get; set; }
         public int QuoteId { get; set; }
         public string PolicyStatus { get; set; }
-        public int PolicyMasterid { get; set; }
+        public int PolicyMasterId { get; set; }
 
         public virtual PolicyMaster PolicyMaster { get; set; }
         public virtual Property Property { get; set; }

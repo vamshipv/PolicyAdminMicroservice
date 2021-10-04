@@ -41,7 +41,7 @@ namespace ConsumerMicroservice
             services.AddScoped<IConsumerRepository, ConsumerRepository>();
             services.AddScoped<IConsumerBusinessRepository, ConsumerBusinessRepository>();
             services.AddScoped<IBusinessPropertyRepository, BusinessPropertyRepository>();
-            services.AddScoped<ConsumerService, ConsumerService>();
+            services.AddScoped<IConsumerService, ConsumerService>();
             services.AddControllers();
             services.AddDbContext<InsureityPortalDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
             services.AddSwaggerGen(c =>

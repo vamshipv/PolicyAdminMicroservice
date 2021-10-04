@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsumerMicroservice.ServiceLayer
 {
-    public class ConsumerService 
+    public class ConsumerService : IConsumerService
     {
         private readonly IConsumerRepository _consumerRepository;
         private readonly IConsumerBusinessRepository _consumerBusinessRepository;

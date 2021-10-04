@@ -1,32 +1,30 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using QuoteMicroservice.Models;
 
 #nullable disable
 
 namespace QuoteMicroservice.Models
 {
-    public partial class PolicyAdminDBContext : DbContext
+    public partial class InsureityPortalDBContext : DbContext
     {
-        public PolicyAdminDBContext()
+        public InsureityPortalDBContext()
         {
         }
 
-        public PolicyAdminDBContext(DbContextOptions<PolicyAdminDBContext> options)
+        public InsureityPortalDBContext(DbContextOptions<InsureityPortalDBContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Quote> Quotes { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=quotedb;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=VAMSHI\\SQLEXPRESS;Database=InsureityPortalDB;Trusted_Connection=True;");
             }
         }
 
@@ -36,12 +34,7 @@ namespace QuoteMicroservice.Models
 
             modelBuilder.Entity<Quote>(entity =>
             {
-                entity.HasKey(e => e.Qid)
-                    .HasName("PK__Quote__CAB1462B0D3762E3");
-
                 entity.ToTable("Quote");
-
-                entity.Property(e => e.Qid).HasColumnName("QId");
 
                 entity.Property(e => e.PropertyType)
                     .IsRequired()

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QuoteMicroservice.Models;
 using QuoteMicroservice.Repository;
+using QuoteMicroservice.servicelayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +14,23 @@ namespace QuoteMicroservice.Controllers
     [ApiController]
     public class QuoteController : ControllerBase
     {
-        private readonly IquoteRepository _quoteRepository;
+        private readonly Iquoteservice _quoteservice;
 
-        public QuoteController(IquoteRepository quoteRepository)
+        public QuoteController(Iquoteservice quoteservice)
         {
-            _quoteRepository = quoteRepository;
+            _quoteservice = quoteservice;
         }
 
         [HttpGet("GetQuote")]
-        public IEnumerable<Quote> GetConsumer()
+        public IEnumerable<Quote> GetQuote()
         {
-            return _quoteRepository.GetQuote();
+            return _quoteservice.GetQuote();
         }
-        [HttpGet("{Id:int}")]
-        public ActionResult GetPropertyById(int Qid)
+
+        [HttpGet("GetQuoteById")]
+        public ActionResult GetQuoteById(int QuoteId)
         {
-            var obj = _quoteRepository.GetQuoteById(Qid);
+            var obj = _quoteservice.GetQuoteById(QuoteId);
             return Ok(obj);
         }
     }

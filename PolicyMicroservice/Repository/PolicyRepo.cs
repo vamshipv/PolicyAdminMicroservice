@@ -9,14 +9,14 @@ namespace PolicyMicroservice.Repository
 {
     public class PolicyRepo : IPolicyRepo
     {
-        private readonly PolicyAdminDBContext context;
+        private readonly InsureityPortalDatabaseContext context;
 
-        public PolicyRepo(PolicyAdminDBContext policyDBContext)
+        public PolicyRepo(InsureityPortalDatabaseContext policyDBContext)
         {
             context = policyDBContext;
         }
 
-        public async Task<string> CreatePolicy(int PropertyId)
+        public virtual async Task<string> CreatePolicy(int PropertyId)
         {
             string PolicyStatus;
             try
@@ -54,8 +54,8 @@ namespace PolicyMicroservice.Repository
                 {
                     PropertyId = PropertyId,
                     PolicyStatus = PolicyStatus,
-                    QuoteId = quote.Result.Qid, // quote.Qid,
-                    PolicyMasterid = pm.Pmid
+                    QuoteId = quote.Result.QuoteId,
+                    PolicyMasterId = pm.PolicyMasterId
                 };
 
                 context.ConsumerPolicies.Add(policy);
@@ -69,14 +69,14 @@ namespace PolicyMicroservice.Repository
             }
         }
 
-        public async Task<string> IssuePolicy(int PolicyId, string PaymentDetails)
+        public virtual async Task<string> IssuePolicy(int PolicyId, string PaymentDetails)
         {
             try
             {
                 if (PaymentDetails == "Paid")
                 {
                     ConsumerPolicy policy = context.ConsumerPolicies.SingleOrDefault(p => p.PolicyId == PolicyId);
-                    if(policy == null)
+                    if (policy == null)
                     {
                         return "No Policy exists with ID " + PolicyId;
                     }
@@ -94,12 +94,11 @@ namespace PolicyMicroservice.Repository
             {
                 return "Policy was not Issued";
             }
-
         }
 
-        public async Task<Quote> GetQuote(int BusinessValue, int PropertyValue)
+        public virtual async Task<Quote> GetQuote(int BusinessValue, int PropertyValue)
         {
-            List<Quote> quotes = context.Quotes.ToList();  
+            List<Quote> quotes = context.Quotes.ToList();
             if (BusinessValue >= 0 && BusinessValue <= 10 && PropertyValue >= 0 && PropertyValue <= 10)
             {
                 foreach (Quote q in quotes)
@@ -107,14 +106,15 @@ namespace PolicyMicroservice.Repository
                     if (BusinessValue >= q.BusinesssValueFrom && BusinessValue <= q.BusinesssValueTo &&
                         PropertyValue >= q.PropertyValueFrom && PropertyValue <= q.PropertyValueTo)
                     {
-                        return await context.Quotes.FindAsync(q.Qid);
+                        return await context.Quotes.FindAsync(q.QuoteId);
                     }
                 }
             }
             return null;
         }
 
-        public dynamic ViewPolicyById(int PolicyId)
+
+        public virtual dynamic ViewPolicyById(int PolicyId)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace PolicyMicroservice.Repository
                         BusinessValue = cp.Property.Business.BusinessMaster.BusinessValue,
                         QuoteValue = cp.Quote.QuoteValue,
                         ConsumerId = cp.Property.Business.ConsumerId,
-                        ConsumerName = cp.Property.Business.Consumer.Name
+                        ConsumerName = cp.Property.Business.Consumer.ConsumerName
                     }).FirstOrDefault();
                 return policy;
             }
@@ -142,7 +142,7 @@ namespace PolicyMicroservice.Repository
             }
         }
 
-        public dynamic ListOfProperties()
+        public virtual dynamic GetProperties()
         {
             try
             {
@@ -158,7 +158,7 @@ namespace PolicyMicroservice.Repository
                         BusinessId = p.BusinessId,
                         BusinessValue = p.Business.BusinessMaster.BusinessValue,
                         ConsumerId = p.Business.ConsumerId,
-                        ConsumerName = p.Business.Consumer.Name
+                        ConsumerName = p.Business.Consumer.ConsumerName
                     }).ToList();
                 return properties;
             }
@@ -168,7 +168,7 @@ namespace PolicyMicroservice.Repository
             }
         }
 
-        public dynamic ListOfPolicies()
+        public virtual dynamic GetPolicies()
         {
             try
             {
@@ -185,7 +185,7 @@ namespace PolicyMicroservice.Repository
                         BusinessValue = cp.Property.Business.BusinessMaster.BusinessValue,
                         QuoteValue = cp.Quote.QuoteValue,
                         ConsumerId = cp.Property.Business.ConsumerId,
-                        ConsumerName = cp.Property.Business.Consumer.Name
+                        ConsumerName = cp.Property.Business.Consumer.ConsumerName
                     }).ToList();
                 return policies;
             }

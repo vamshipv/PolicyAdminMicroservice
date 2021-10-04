@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using QuoteMicroservice.Models;
 using QuoteMicroservice.Repository;
+using QuoteMicroservice.servicelayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,8 @@ namespace QuoteMicroservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<PolicyAdminDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
+            services.AddScoped<Iquoteservice, quoteservice>();
+            services.AddDbContext<InsureityPortalDBContext>(item => item.UseSqlServer(Configuration.GetConnectionString("TestConnectionString")));
             services.AddScoped<IquoteRepository, quoteRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

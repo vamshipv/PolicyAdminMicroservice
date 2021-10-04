@@ -12,7 +12,7 @@ namespace PolicyMicroservice.Models
             ConsumerPolicies = new HashSet<ConsumerPolicy>();
         }
 
-        public int Qid { get; set; }
+        public int QuoteId { get; set; }
         public int PropertyValueFrom { get; set; }
         public int PropertyValueTo { get; set; }
         public int BusinesssValueFrom { get; set; }

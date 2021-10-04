@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using PolicyMicroservice.Repository;
 using Microsoft.Extensions.Logging;
 using PolicyMicroservice.Models;
+using PolicyMicroservice.Service;
 
 namespace PolicyMicroservice.Controllers
 {
@@ -18,13 +19,12 @@ namespace PolicyMicroservice.Controllers
     [ApiController]
     public class PolicyController : ControllerBase
     {
-        //static readonly log4net.ILog _log4net = log4net.LogManager.GetLogger(typeof(PolicyController));
         static readonly log4net.ILog _log4net = log4net.LogManager.GetLogger(typeof(PolicyController));
-        private readonly IPolicyRepo _policyRepo;
+        private readonly IPolicyService _policyService;
 
-        public PolicyController(IPolicyRepo policyRepo)
+        public PolicyController(IPolicyService policyService)
         {
-            _policyRepo = policyRepo;
+            _policyService = policyService;
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
@@ -32,7 +32,7 @@ namespace PolicyMicroservice.Controllers
         public async Task<string> CreatePolicy(int PropertyId)
         {
             _log4net.Info("CreatePolicy has been accessed");
-            return await _policyRepo.CreatePolicy(PropertyId);
+            return await _policyService.CreatePolicy(PropertyId);
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
@@ -40,15 +40,15 @@ namespace PolicyMicroservice.Controllers
         public async Task<string> IssuePolicy(int PolicyId, string PaymentDetails)
         {
             _log4net.Info("IssuePolicy has been accessed");
-            return await _policyRepo.IssuePolicy(PolicyId, PaymentDetails);
+            return await _policyService.IssuePolicy(PolicyId, PaymentDetails);
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("ViewConsumerPolicyById")]
-        public dynamic ViewConsumerPolicyById(int PolicyId)  //async Task<ActionResult<
+        public dynamic ViewConsumerPolicyById(int PolicyId)
         {
             _log4net.Info("ViewConsumerPolicyById has been accessed");
-            var policy = _policyRepo.ViewPolicyById(PolicyId);
+            var policy = _policyService.ViewPolicyById(PolicyId);
             return policy;
         }
 
@@ -57,25 +57,25 @@ namespace PolicyMicroservice.Controllers
         public async Task<Quote> GetQuote(int BusinessValue, int PropertyValue)
         {
             _log4net.Info("GetQuote has been accessed");
-            var quote = await _policyRepo.GetQuote(BusinessValue, PropertyValue);
+            var quote = await _policyService.GetQuote(BusinessValue, PropertyValue);
             return quote;
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
-        [HttpGet("ViewPolicies")]
-        public dynamic ViewPolicies()
+        [HttpGet("GetPolicies")]
+        public dynamic GetPolicies()
         {
             _log4net.Info("ViewConsumerPolicyById has been accessed");
-            var policies = _policyRepo.ListOfPolicies();
+            var policies = _policyService.GetPolicies();
             return policies;
         }
 
         // [Authorize(AuthenticationSchemes = "Bearer")]
-        [HttpGet("ViewProperties")]
-        public dynamic ViewProperties()
+        [HttpGet("GetProperties")]
+        public dynamic GetProperties()
         {
             _log4net.Info("ViewConsumerPolicyById has been accessed");
-            var properties = _policyRepo.ListOfProperties();
+            var properties = _policyService.GetProperties();
             return properties;
         }
     }

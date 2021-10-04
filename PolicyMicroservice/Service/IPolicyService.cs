@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PolicyMicroservice.Repository
+namespace PolicyMicroservice.Service
 {
-    public interface IPolicyRepo
+    public interface IPolicyService
     {
         public Task<string> CreatePolicy(int PropertyId);
 
@@ -19,6 +19,5 @@ namespace PolicyMicroservice.Repository
         public dynamic GetProperties();
 
         public dynamic GetPolicies();
-
     }
 }

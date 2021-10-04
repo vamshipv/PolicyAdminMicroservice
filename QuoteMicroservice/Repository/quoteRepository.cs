@@ -8,21 +8,22 @@ namespace QuoteMicroservice.Repository
 {
     public class quoteRepository : IquoteRepository
     {
-        private readonly PolicyAdminDBContext _dbContext;
+        private readonly InsureityPortalDBContext _dbContext;
 
-        public quoteRepository(PolicyAdminDBContext dbContext)
+        public quoteRepository(InsureityPortalDBContext dbContext)
         {
             _dbContext = dbContext;
         }
+
         public IEnumerable<Quote> GetQuote()
         {
             return _dbContext.Quotes.ToList();
         }
 
-        public Quote GetQuoteById(int Qid)
+        public Quote GetQuoteById(int QuoteId)
         {
 
-            return _dbContext.Quotes.FirstOrDefault(x => x.Qid == Qid);
+            return _dbContext.Quotes.FirstOrDefault(x => x.QuoteId == QuoteId);
         }
     }
 }

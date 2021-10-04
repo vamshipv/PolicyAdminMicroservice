@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace PolicyMicroservice.Models
 {
-    public partial class PolicyAdminDBContext : DbContext
+    public partial class InsureityPortalDatabaseContext : DbContext
     {
-        public PolicyAdminDBContext()
+        public InsureityPortalDatabaseContext()
         {
         }
 
-        public PolicyAdminDBContext(DbContextOptions<PolicyAdminDBContext> options)
+        public InsureityPortalDatabaseContext(DbContextOptions<InsureityPortalDatabaseContext> options)
             : base(options)
         {
         }
 
-
+        public virtual DbSet<Agent> Agents { get; set; }
         public virtual DbSet<Business> Businesses { get; set; }
         public virtual DbSet<BusinessMaster> BusinessMasters { get; set; }
         public virtual DbSet<Consumer> Consumers { get; set; }
@@ -31,20 +31,33 @@ namespace PolicyMicroservice.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=SATHZZ;Database=PolicyDB;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=VAMSHI\\SQLEXPRESS;Database=InsureityPortalDatabase;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Agent>(entity =>
+            {
+                entity.ToTable("Agent");
+
+                entity.Property(e => e.AgentName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
 
             modelBuilder.Entity<Business>(entity =>
             {
                 entity.ToTable("Business");
-
-                entity.Property(e => e.BusinessId).ValueGeneratedNever();
 
                 entity.Property(e => e.BusinessName)
                     .IsRequired()
@@ -60,41 +73,31 @@ namespace PolicyMicroservice.Models
                     .WithMany(p => p.Businesses)
                     .HasForeignKey(d => d.BusinessMasterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Business__Busine__6FE99F9F");
+                    .HasConstraintName("FK__Business__Busine__2D27B809");
 
                 entity.HasOne(d => d.Consumer)
                     .WithMany(p => p.Businesses)
                     .HasForeignKey(d => d.ConsumerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Business__Consum__70DDC3D8");
+                    .HasConstraintName("FK__Business__Consum__2E1BDC42");
             });
 
             modelBuilder.Entity<BusinessMaster>(entity =>
             {
                 entity.ToTable("BusinessMaster");
-
-                entity.Property(e => e.BusinessMasterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Consumer>(entity =>
             {
                 entity.ToTable("Consumer");
 
-                entity.Property(e => e.ConsumerId).ValueGeneratedNever();
-
-                entity.Property(e => e.AgentName)
+                entity.Property(e => e.ConsumerName)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Dob).HasColumnType("datetime");
+                entity.Property(e => e.DateOfBirth).HasColumnType("date");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -103,12 +106,18 @@ namespace PolicyMicroservice.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Agent)
+                    .WithMany(p => p.Consumers)
+                    .HasForeignKey(d => d.AgentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Consumer__AgentI__267ABA7A");
             });
 
             modelBuilder.Entity<ConsumerPolicy>(entity =>
             {
                 entity.HasKey(e => e.PolicyId)
-                    .HasName("PK__Consumer__2E1339A4F7A35C02");
+                    .HasName("PK__Consumer__2E1339A4567C4E44");
 
                 entity.ToTable("ConsumerPolicy");
 
@@ -117,35 +126,29 @@ namespace PolicyMicroservice.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.QuoteId).HasColumnName("QuoteID");
-
                 entity.HasOne(d => d.PolicyMaster)
                     .WithMany(p => p.ConsumerPolicies)
-                    .HasForeignKey(d => d.PolicyMasterid)
+                    .HasForeignKey(d => d.PolicyMasterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ConsumerP__Polic__05D8E0BE");
+                    .HasConstraintName("FK__ConsumerP__Polic__3A81B327");
 
                 entity.HasOne(d => d.Property)
                     .WithMany(p => p.ConsumerPolicies)
                     .HasForeignKey(d => d.PropertyId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ConsumerP__Prope__03F0984C");
+                    .HasConstraintName("FK__ConsumerP__Prope__38996AB5");
 
                 entity.HasOne(d => d.Quote)
                     .WithMany(p => p.ConsumerPolicies)
                     .HasForeignKey(d => d.QuoteId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ConsumerP__Quote__04E4BC85");
+                    .HasConstraintName("FK__ConsumerP__Quote__398D8EEE");
             });
 
             modelBuilder.Entity<PolicyMaster>(entity =>
             {
-                entity.HasKey(e => e.Pmid)
-                    .HasName("PK__PolicyMa__5C86FF4661C44D0E");
+                entity.HasKey(e => e.PolicyMasterId)
+                    .HasName("PK__PolicyMa__2B2E4F00B7651340");
 
                 entity.ToTable("PolicyMaster");
-
-                entity.Property(e => e.Pmid).HasColumnName("PMId");
 
                 entity.Property(e => e.AssuredSum).HasColumnType("decimal(10, 3)");
 
@@ -159,23 +162,20 @@ namespace PolicyMicroservice.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PropertyType)
+                entity.Property(e => e.PolicyType)
                     .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Ptype)
+                entity.Property(e => e.PropertyType)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("PType");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Property>(entity =>
             {
                 entity.ToTable("Property");
-
-                entity.Property(e => e.PropertyId).ValueGeneratedNever();
 
                 entity.Property(e => e.BuildingType)
                     .IsRequired()
@@ -185,31 +185,23 @@ namespace PolicyMicroservice.Models
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Properties)
                     .HasForeignKey(d => d.BusinessId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Property__Busine__73BA3083");
+                    .HasConstraintName("FK__Property__Busine__30F848ED");
 
                 entity.HasOne(d => d.PropertyMaster)
                     .WithMany(p => p.Properties)
                     .HasForeignKey(d => d.PropertyMasterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Property__Proper__74AE54BC");
+                    .HasConstraintName("FK__Property__Proper__31EC6D26");
             });
 
             modelBuilder.Entity<PropertyMaster>(entity =>
             {
                 entity.ToTable("PropertyMaster");
-
-                entity.Property(e => e.PropertyMasterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Quote>(entity =>
             {
-                entity.HasKey(e => e.Qid)
-                    .HasName("PK__Quote__CAB1462B0D3762E3");
-
                 entity.ToTable("Quote");
-
-                entity.Property(e => e.Qid).HasColumnName("QId");
 
                 entity.Property(e => e.PropertyType)
                     .IsRequired()
