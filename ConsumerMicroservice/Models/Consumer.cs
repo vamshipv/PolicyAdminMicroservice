@@ -8,7 +8,6 @@ namespace ConsumerMicroservice.Models
 {
     public partial class Consumer
     {
-
         public int ConsumerId { get; set; }
         public string ConsumerName { get; set; }
 

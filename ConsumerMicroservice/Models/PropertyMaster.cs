@@ -12,6 +12,5 @@ namespace ConsumerMicroservice.Models
         public int SalvageValue { get; set; }
         public int UsefulLifeOfAssest { get; set; }
         public int PropertyValue { get; set; }
-
     }
 }

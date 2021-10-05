@@ -28,14 +28,14 @@ namespace PolicyMicroservice.Repository
                     .SingleOrDefault(b => b.PropertyId == PropertyId);
                 if (property == null)
                 {
-                    PolicyStatus = "No such property exists. Hence, Policy was not created";
+                    PolicyStatus = "No such Property exists. Hence, Policy was not created.";
                     return PolicyStatus;
                 }
 
                 var quote = GetQuote(property.Business.BusinessMaster.BusinessValue, property.PropertyMaster.PropertyValue);
                 if (quote == null)
                 {
-                    PolicyStatus = "No such Quote exists. Hence, Policy was not created";
+                    PolicyStatus = "No such Quote exists. Hence, Policy was not created.";
                     return PolicyStatus;
                 }
 
@@ -44,7 +44,7 @@ namespace PolicyMicroservice.Repository
                     .SingleOrDefault();
                 if (pm == null)
                 {
-                    PolicyStatus = "No such PolicyMaster exists. Hence, Policy was not created";
+                    PolicyStatus = "No such PolicyMaster exists. Hence, Policy was not created.";
                     return PolicyStatus;
                 }
 
@@ -60,11 +60,11 @@ namespace PolicyMicroservice.Repository
 
                 context.ConsumerPolicies.Add(policy);
                 await context.SaveChangesAsync();
-                return "Policy has been created with Policy Status \'" + PolicyStatus + "\'";
+                return "Policy has been created with Policy Status \'" + PolicyStatus + "\'.";
             }
             catch
             {
-                PolicyStatus = "Policy was not created";
+                PolicyStatus = "Policy was not created.";
                 return PolicyStatus;
             }
         }
@@ -78,21 +78,21 @@ namespace PolicyMicroservice.Repository
                     ConsumerPolicy policy = context.ConsumerPolicies.SingleOrDefault(p => p.PolicyId == PolicyId);
                     if (policy == null)
                     {
-                        return "No Policy exists with ID " + PolicyId;
+                        return "No Policy exists with ID " + PolicyId + ".";
                     }
                     if (policy.PolicyStatus == "Issued")
                     {
-                        return "Policy has already been Issued";
+                        return "Policy has already been Issued.";
                     }
                     policy.PolicyStatus = "Issued";
                     await context.SaveChangesAsync();
-                    return "Policy has been " + policy.PolicyStatus + " for Policy ID " + policy.PolicyId;
+                    return "Policy has been " + policy.PolicyStatus + " for Policy ID " + policy.PolicyId + ".";
                 }
-                return "No Payment was made. Hence, Policy was not Issued";
+                return "No Payment was made. Hence, Policy was not Issued.";
             }
             catch
             {
-                return "Policy was not Issued";
+                return "Policy was not Issued.";
             }
         }
 

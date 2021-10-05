@@ -7,7 +7,6 @@ namespace ConsumerMicroservice.Models
 {
     public partial class Property
     {
-
         public int PropertyId { get; set; }
         public string BuildingType { get; set; }
         public int BuildingStoreys { get; set; }

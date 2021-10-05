@@ -58,7 +58,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // Display of consumer by ID
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("GetConsumerById")]
         public ActionResult GetConsumerById(int ConsumerId)
         {
@@ -67,7 +67,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // Display of business by ID
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("GetBusinessById")]
         public ActionResult GetBusinessById(int BusinessId)
         {
@@ -76,7 +76,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // Display of property by ID
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("GetPropertyById")]
         public ActionResult GetPropertyById(int PropertyId)
         {
@@ -86,7 +86,7 @@ namespace ConsumerMicroservice.Controllers
 
 
         // Create Consumer using HTTPPOST
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateConsumer")]
         //[EnableCors("AllowAllOrigins")]
         [ProducesResponseType(201, Type = typeof(Consumer))]
@@ -117,7 +117,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // Create Business using HTTPPOST
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateBusiness")]
         [ProducesResponseType(204)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -146,7 +146,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // Create Property using HTTPPOST
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost("CreateProperty")]
         [ProducesResponseType(204)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -175,7 +175,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // udpate consumer
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateConsumer")]
         public ActionResult UpdateConsumer(int ConsumerId, [FromBody] Consumer consumer)
         {
@@ -203,7 +203,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // udpate business
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateBusiness")]
         public ActionResult UpdateBusiness(int BusinessId, [FromBody] Business business)
         {
@@ -231,7 +231,7 @@ namespace ConsumerMicroservice.Controllers
         }
 
         // udpate property  
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateProperty")]
         public ActionResult UpdateProperty(int PropertyId, [FromBody] Property property)
         {

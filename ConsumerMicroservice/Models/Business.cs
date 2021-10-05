@@ -7,7 +7,6 @@ namespace ConsumerMicroservice.Models
 {
     public partial class Business
     {
-
         public int BusinessId { get; set; }
         public string BusinessName { get; set; }
         public string BusinessType { get; set; }

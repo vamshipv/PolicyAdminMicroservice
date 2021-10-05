@@ -12,7 +12,8 @@ namespace ConsumerMicroservice.ServiceLayer
         private readonly IConsumerRepository _consumerRepository;
         private readonly IConsumerBusinessRepository _consumerBusinessRepository;
         private readonly IBusinessPropertyRepository _businessPropertyRepository;
-        public ConsumerService(IConsumerRepository consumerRepository, IConsumerBusinessRepository consumerBusinessRepository,IBusinessPropertyRepository businessPropertyRepository)
+        public ConsumerService(IConsumerRepository consumerRepository, IConsumerBusinessRepository consumerBusinessRepository,
+            IBusinessPropertyRepository businessPropertyRepository)
         {
             _consumerRepository = consumerRepository;
             _consumerBusinessRepository = consumerBusinessRepository;

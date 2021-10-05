@@ -35,7 +35,7 @@ namespace PolicyMicroservice.Controllers
             return await _policyService.CreatePolicy(PropertyId);
         }
 
-        // [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("IssuePolicy")]
         public async Task<string> IssuePolicy(int PolicyId, string PaymentDetails)
         {
