@@ -1,4 +1,4 @@
-# PolicyAdminMicroservice
+# PolicyAdmin Microservice
 
 > Authorization Microservice
 
